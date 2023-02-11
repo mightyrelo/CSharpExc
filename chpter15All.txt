@@ -1,0 +1,219 @@
+////////Exc1
+using System;
+using System.IO;
+
+class Chapter15
+{
+	static void Main()
+	{
+		
+		string path = @"../OddLines.txt";
+		ReadFile(path);
+	}
+	
+	static void ReadFile(string path)
+	{
+		try
+		{
+			StreamReader reader = new StreamReader(path);
+			using(reader)
+			{
+				int count = 0;
+				string line = reader.ReadLine();
+				while(line != null)
+				{
+					
+					if(count%2 == 0)
+					{
+						Console.WriteLine(line);
+					}					
+					count++;
+					line = reader.ReadLine();
+				}			
+			}
+		}
+		catch(FileNotFoundException)
+		{
+			Console.Error.WriteLine("File not found");
+		}
+		catch(IOException)
+		{
+			Console.Error.WriteLine("Reading error");
+		}
+	}
+}
+
+
+//////////////////////////////////////////////Exc2
+
+using System;
+using System.IO;
+
+class FileCombinerTester
+{
+	static void Main()
+	{
+		string file1 = @"../File1.txt";
+		string file2 = @"../File2.txt";
+		string file1Content = FileCombiner.ReadFile(file1);
+		string file2Content = FileCombiner.ReadFile(file2);
+		FileCombiner.CombineFiles(file1Content, file2Content);
+	}
+}
+
+
+///////////////////////////////
+using System;
+using System.IO;
+
+class FileCombinerTester
+{
+	static void Main()
+	{
+		string file1 = @"../File1.txt";
+		string file2 = @"../File2.txt";
+		string file1Content = FileCombiner.ReadFile(file1);
+		string file2Content = FileCombiner.ReadFile(file2);
+		FileCombiner.CombineFiles(file1Content, file2Content);
+	}
+}
+
+class FileCombiner
+{
+	public static string ReadFile(string fileName)
+	{
+		string output = null;
+		try
+		{
+			StreamReader reader = new StreamReader(fileName);
+			using(reader)
+			{
+				string line = reader.ReadLine();
+				while(line != null)
+				{
+					output = string.Concat(output, line + "\n");
+					line = reader.ReadLine();		
+				}
+			}
+			return output;
+			
+		}
+		catch(FileNotFoundException)
+		{
+			Console.Error.WriteLine("file not found");
+		}
+		catch(IOException)
+		{
+			Console.Error.WriteLine("error while reading");
+		}
+		return null;
+	}
+
+	public static void CombineFiles(string file1, string file2)
+	{
+		//append file 2 to file 1
+		string output = string.Concat(file1,file2);
+
+		try
+		{
+			StreamWriter writer = new StreamWriter("combined.txt");
+			using(writer)
+			{
+				writer.WriteLine(output);
+			}
+						
+		}
+		catch(IOException)
+		{
+			Console.Error.WriteLine("error while writing");
+		}
+	}
+}
+
+
+///////////////////////////////////////////
+
+using System;
+using System.IO;
+
+class LineNumberInserter
+{
+	private const string INPUT_FILE = "input.txt";
+	private const string OUTPUT_FILE = "output.txt";
+	
+	static void Main()
+	{
+		try
+		{
+			StreamReader reader = new StreamReader(INPUT_FILE);
+			StreamWriter writer = new StreamWriter(OUTPUT_FILE);
+			int count = 1;
+			using(reader)
+			{
+				using(writer)
+				{
+					string line = reader.ReadLine();
+					while(line != null)
+					{	
+						writer.WriteLine("{0}: {1}", count, line);
+						count++;
+						line = reader.ReadLine();
+					}
+				}
+							
+			}
+		}
+		catch(FileNotFoundException)
+		{
+			Console.Error.WriteLine("file not found");
+		}
+		catch(IOException)
+		{
+			Console.Error.WriteLine("input/output error");
+		}
+	}	
+}
+
+
+////////////////////////////////////
+using System;
+using System.IO;
+
+class TestComparor
+{
+	static void Main()
+	{
+		string file1 = @"../File1.txt";
+		string file2 = @"../File2.txt";
+		string[] fileArray1 = FileComparor.ReadFileIntoArray(file1);
+		string[] fileArray2 = FileComparor.ReadFileIntoArray(file2);
+		FileComparor.CompareFiles(fileArray1, fileArray2);
+	}
+}
+
+class FileComparor
+{
+	public static void CompareFiles(string[] file1, string[] file2)
+	{
+		int equalRows = 0;
+		int unequalRows = 0;
+		for(int i = 0; i < file1.Length; i++)
+		{
+			if(file1[i].Equals(file2[i]))
+			{
+				equalRows++;
+			}
+			else
+			{
+				unequalRows++;
+			}  
+		}
+		Console.WriteLine("There are {0} equal rows and {1} unequal ones.", equalRows, unequalRows);	
+	}
+
+	public static string[] ReadFileIntoArray(string fileName)
+	{
+		string[] input = File.ReadAllLines(fileName);
+		return input;
+	}
+}
